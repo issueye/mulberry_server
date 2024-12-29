@@ -10,7 +10,6 @@ func RunServer(ctx context.Context) {
 	InitConfig()
 	InitLogger()
 	InitDB()
-	InitRedkaDB()
 	InitEngine(ctx)
 	InitStore()
 	InitHttpServer(ctx)

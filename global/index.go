@@ -7,7 +7,6 @@ import (
 	"net/http"
 
 	"github.com/gin-gonic/gin"
-	"github.com/nalgeon/redka"
 	"gorm.io/gorm"
 )
 
@@ -17,7 +16,6 @@ var (
 	HttpEngine *gin.Engine
 	HttpServer *http.Server
 	DB         *gorm.DB
-	R_DB       *redka.DB
 	S_WEB      fs.FS
 	STORE      store.Store
 )

@@ -8,12 +8,9 @@ require (
 	github.com/dgrijalva/jwt-go v3.2.0+incompatible
 	github.com/didip/tollbooth v4.0.2+incompatible
 	github.com/gin-contrib/cors v1.7.2
-	github.com/gin-contrib/gzip v1.0.1
 	github.com/gin-contrib/zap v1.1.4
 	github.com/gin-gonic/gin v1.10.0
-	github.com/go-resty/resty/v2 v2.16.2
 	github.com/gorilla/mux v1.8.1
-	github.com/nalgeon/redka v0.5.3
 	github.com/ncruces/go-sqlite3 v0.21.3
 	github.com/satori/go.uuid v1.2.0
 	github.com/swaggo/swag v1.16.4

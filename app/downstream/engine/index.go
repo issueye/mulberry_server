@@ -11,7 +11,6 @@ import (
 	"strings"
 	"sync"
 
-	"github.com/gin-contrib/gzip"
 	"github.com/gin-gonic/gin"
 	"github.com/gorilla/mux"
 )
@@ -117,53 +116,6 @@ func (grape *GrapeEngine) Init() error {
 type Page struct {
 	RoutePath  string // 路径
 	StaticPath string // 静态资源路径
-}
-
-func (grape *GrapeEngine) GinGzipFilter() error {
-	gf := service.NewGzipFilter()
-	list, err := gf.GetDatasByMap(map[string]any{
-		"port":   grape.Port,
-		"status": 1,
-	})
-	if err != nil {
-		return err
-	}
-
-	extensions := []string{}
-	paths := []string{}
-	regexs := []string{}
-	for _, filter := range list {
-		switch filter.MatchType {
-		case 1:
-			paths = append(paths, filter.MatchContent)
-		case 2:
-			extensions = append(extensions, filter.MatchContent)
-		case 3:
-			regexs = append(regexs, filter.MatchContent)
-		}
-	}
-
-	options := make([]gzip.Option, 0)
-
-	if len(extensions) > 0 {
-		options = append(options, gzip.WithExcludedExtensions(extensions))
-	}
-
-	if len(paths) > 0 {
-		options = append(options, gzip.WithExcludedPaths(paths))
-	}
-
-	if len(regexs) > 0 {
-		options = append(options, gzip.WithExcludedPathsRegexs(regexs))
-	}
-
-	if len(options) > 0 {
-		grape.Engine.Use(gzip.Gzip(gzip.DefaultCompression, options...))
-	} else {
-		grape.Engine.Use(gzip.Gzip(gzip.DefaultCompression))
-	}
-
-	return nil
 }
 
 // GinPages

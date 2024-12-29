@@ -8,7 +8,6 @@ import (
 	"mulberry/host/global"
 	"path/filepath"
 
-	"github.com/nalgeon/redka"
 	_ "github.com/ncruces/go-sqlite3/driver"
 	_ "github.com/ncruces/go-sqlite3/embed"
 	"gorm.io/gorm"
@@ -52,15 +51,4 @@ func FreeDB() {
 	if err = sqldb.Close(); err != nil {
 		global.Logger.Sugar().Errorf("close db error: %v", err)
 	}
-}
-
-func InitRedkaDB() {
-	path := filepath.Join(global.ROOT_PATH, "data", "rdb.db")
-
-	rdb, err := redka.Open(path, nil)
-	if err != nil {
-		panic(err)
-	}
-
-	global.R_DB = rdb
 }

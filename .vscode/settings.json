@@ -1,8 +1,10 @@
 {
     "cSpell.words": [
         "apikey",
+        "buildmode",
         "bytedance",
         "cloudwego",
+        "cockroachdb",
         "cpuid",
         "creack",
         "davecgh",
@@ -24,6 +26,7 @@
         "julianday",
         "Kewfr",
         "klauspost",
+        "ldflags",
         "leodido",
         "libedit",
         "lithammer",
@@ -49,16 +52,22 @@
         "rogpeppe",
         "shortuuid",
         "SLXVDP",
+        "sqldb",
         "stdr",
         "stretchr",
         "swaggo",
         "Telen",
+        "tempdll",
         "tetratelabs",
         "twitchyliquid",
         "ugorji",
         "urlesc",
         "vasile",
         "wazero",
-        "ying"
+        "winappres",
+        "windowsgui",
+        "winres",
+        "ying",
+        "rsrc"
     ]
 }
