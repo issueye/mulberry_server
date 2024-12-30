@@ -1,7 +1,7 @@
 package route
 
 import (
-	v1 "mulberry/host/app/admin/controller/v1"
+	v1 "mulberry/app/admin/controller/v1"
 
 	"github.com/gin-gonic/gin"
 )

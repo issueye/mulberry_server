@@ -3,11 +3,11 @@ package initialize
 import (
 	"context"
 	"fmt"
-	"mulberry/host/common/config"
-	"mulberry/host/common/middleware"
-	"mulberry/host/common/route"
-	"mulberry/host/docs"
-	"mulberry/host/global"
+	"mulberry/common/config"
+	"mulberry/common/middleware"
+	"mulberry/common/route"
+	"mulberry/docs"
+	"mulberry/global"
 	"net/http"
 	"time"
 

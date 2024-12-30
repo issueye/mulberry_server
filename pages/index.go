@@ -1,6 +1,6 @@
 package pages
 
-import "mulberry/host/global"
+import "mulberry/global"
 
 func WriteLog(log string) {
 	if global.Logger != nil {

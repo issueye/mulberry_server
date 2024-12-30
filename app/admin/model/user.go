@@ -1,6 +1,6 @@
 package model
 
-import "mulberry/host/common/model"
+import "mulberry/common/model"
 
 type User struct {
 	model.BaseModel

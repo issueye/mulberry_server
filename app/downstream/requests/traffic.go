@@ -1,6 +1,6 @@
 package requests
 
-import commonModel "mulberry/host/common/model"
+import commonModel "mulberry/common/model"
 
 type QueryTraffic struct {
 }

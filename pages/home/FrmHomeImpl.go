@@ -3,8 +3,8 @@ package home
 import (
 	"context"
 	"fmt"
-	"mulberry/host/global"
-	"mulberry/host/pages/about"
+	"mulberry/global"
+	"mulberry/pages/about"
 	"time"
 
 	"github.com/ying32/govcl/vcl"

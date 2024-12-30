@@ -1,10 +1,10 @@
 package route
 
 import (
-	adminRoute "mulberry/host/app/admin/route"
-	downstreamRoute "mulberry/host/app/downstream/route"
-	"mulberry/host/common/controller"
-	"mulberry/host/global"
+	adminRoute "mulberry/app/admin/route"
+	downstreamRoute "mulberry/app/downstream/route"
+	"mulberry/common/controller"
+	"mulberry/global"
 	"net/http"
 
 	"github.com/gin-gonic/gin"

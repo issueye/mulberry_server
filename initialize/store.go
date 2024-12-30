@@ -1,8 +1,8 @@
 package initialize
 
 import (
-	"mulberry/host/common/store"
-	"mulberry/host/global"
+	"mulberry/global"
+	"mulberry/pkg/store"
 	"path/filepath"
 )
 

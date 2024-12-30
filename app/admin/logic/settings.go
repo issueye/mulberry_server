@@ -1,9 +1,9 @@
 package logic
 
 import (
-	"mulberry/host/app/admin/requests"
-	"mulberry/host/app/admin/response"
-	"mulberry/host/common/config"
+	"mulberry/app/admin/requests"
+	"mulberry/app/admin/response"
+	"mulberry/common/config"
 )
 
 func GetSystemSettings() []*response.Settings {

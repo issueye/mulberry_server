@@ -1,6 +1,6 @@
 package model
 
-import "mulberry/host/common/model"
+import "mulberry/common/model"
 
 // 证书信息
 type CertInfo struct {

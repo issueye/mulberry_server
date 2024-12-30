@@ -1,10 +1,10 @@
 package logic
 
 import (
-	"mulberry/host/app/downstream/model"
-	"mulberry/host/app/downstream/requests"
-	"mulberry/host/app/downstream/service"
-	commonModel "mulberry/host/common/model"
+	"mulberry/app/downstream/model"
+	"mulberry/app/downstream/requests"
+	"mulberry/app/downstream/service"
+	commonModel "mulberry/common/model"
 )
 
 func CreateGzipFilter(req *requests.CreateGzipFilter) error {

@@ -1,8 +1,8 @@
 package service
 
 import (
-	"mulberry/host/common/model"
-	"mulberry/host/global"
+	"mulberry/common/model"
+	"mulberry/global"
 
 	"gorm.io/gorm"
 )

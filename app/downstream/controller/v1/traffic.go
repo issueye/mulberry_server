@@ -1,9 +1,9 @@
 package v1
 
 import (
-	"mulberry/host/app/downstream/logic"
-	"mulberry/host/app/downstream/requests"
-	"mulberry/host/common/controller"
+	"mulberry/app/downstream/logic"
+	"mulberry/app/downstream/requests"
+	"mulberry/common/controller"
 
 	"github.com/gin-gonic/gin"
 )

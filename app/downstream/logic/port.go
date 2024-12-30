@@ -1,12 +1,12 @@
 package logic
 
 import (
-	"mulberry/host/app/downstream/engine"
-	"mulberry/host/app/downstream/model"
-	"mulberry/host/app/downstream/requests"
-	"mulberry/host/app/downstream/service"
-	commonModel "mulberry/host/common/model"
-	"mulberry/host/global"
+	"mulberry/app/downstream/engine"
+	"mulberry/app/downstream/model"
+	"mulberry/app/downstream/requests"
+	"mulberry/app/downstream/service"
+	commonModel "mulberry/common/model"
+	"mulberry/global"
 )
 
 func CreatePort(req *requests.CreatePort) error {

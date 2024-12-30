@@ -1,7 +1,7 @@
 package about
 
 import (
-	"mulberry/host/global"
+	"mulberry/global"
 
 	"github.com/ying32/govcl/vcl"
 	"github.com/ying32/govcl/vcl/types"

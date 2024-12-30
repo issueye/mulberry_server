@@ -1,8 +1,8 @@
 package v1
 
 import (
-	"mulberry/host/app/admin/logic"
-	"mulberry/host/common/controller"
+	"mulberry/app/admin/logic"
+	"mulberry/common/controller"
 
 	"github.com/gin-gonic/gin"
 )

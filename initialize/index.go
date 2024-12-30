@@ -2,7 +2,7 @@ package initialize
 
 import (
 	"context"
-	"mulberry/host/global"
+	"mulberry/global"
 )
 
 func RunServer(ctx context.Context) {

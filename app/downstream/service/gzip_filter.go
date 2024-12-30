@@ -1,10 +1,10 @@
 package service
 
 import (
-	"mulberry/host/app/downstream/model"
-	"mulberry/host/app/downstream/requests"
-	commonModel "mulberry/host/common/model"
-	"mulberry/host/common/service"
+	"mulberry/app/downstream/model"
+	"mulberry/app/downstream/requests"
+	commonModel "mulberry/common/model"
+	"mulberry/common/service"
 
 	"gorm.io/gorm"
 )

@@ -1,6 +1,6 @@
 package model
 
-import "mulberry/host/common/model"
+import "mulberry/common/model"
 
 type TargetInfo struct {
 	model.BaseModel
