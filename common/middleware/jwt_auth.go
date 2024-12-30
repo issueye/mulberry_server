@@ -2,8 +2,8 @@ package middleware
 
 import (
 	"errors"
-	"mulberry/host/common/config"
-	"mulberry/host/common/controller"
+	"mulberry/common/config"
+	"mulberry/common/controller"
 	"net/http"
 
 	"github.com/dgrijalva/jwt-go"

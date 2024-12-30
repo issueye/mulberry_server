@@ -2,8 +2,8 @@ package global
 
 import (
 	"io/fs"
-	"mulberry/common/logger"
-	"mulberry/host/common/store"
+	"mulberry/pkg/logger"
+	"mulberry/pkg/store"
 	"net/http"
 
 	"github.com/gin-gonic/gin"

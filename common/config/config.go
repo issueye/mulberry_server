@@ -8,9 +8,9 @@ import (
 	"strings"
 	"time"
 
-	"mulberry/common/db"
-	"mulberry/common/logger"
-	"mulberry/common/utils"
+	"mulberry/pkg/db"
+	"mulberry/pkg/logger"
+	"mulberry/pkg/utils"
 
 	"gorm.io/gorm"
 )

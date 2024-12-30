@@ -1,9 +1,9 @@
 package v1
 
 import (
-	"mulberry/host/app/admin/logic"
-	"mulberry/host/app/admin/requests"
-	"mulberry/host/common/controller"
+	"mulberry/app/admin/logic"
+	"mulberry/app/admin/requests"
+	"mulberry/common/controller"
 	"strconv"
 
 	"github.com/gin-gonic/gin"

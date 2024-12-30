@@ -1,6 +1,6 @@
 package model
 
-import "mulberry/host/common/model"
+import "mulberry/common/model"
 
 type Menu struct {
 	model.BaseModel

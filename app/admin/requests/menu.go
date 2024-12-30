@@ -1,7 +1,7 @@
 package requests
 
 import (
-	commonModel "mulberry/host/common/model"
+	commonModel "mulberry/common/model"
 )
 
 type QueryMenu struct {

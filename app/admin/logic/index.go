@@ -3,12 +3,12 @@ package logic
 import (
 	"errors"
 	"fmt"
-	"mulberry/host/app/admin/model"
-	"mulberry/host/app/admin/requests"
-	"mulberry/host/app/admin/response"
-	"mulberry/host/app/admin/service"
-	"mulberry/host/common/config"
-	"mulberry/host/global"
+	"mulberry/app/admin/model"
+	"mulberry/app/admin/requests"
+	"mulberry/app/admin/response"
+	"mulberry/app/admin/service"
+	"mulberry/common/config"
+	"mulberry/global"
 	"time"
 
 	"github.com/dgrijalva/jwt-go"

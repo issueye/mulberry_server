@@ -1,12 +1,12 @@
 package logic
 
 import (
-	"mulberry/common/utils"
-	"mulberry/host/app/downstream/model"
-	"mulberry/host/app/downstream/requests"
-	"mulberry/host/app/downstream/service"
-	commonModel "mulberry/host/common/model"
-	"mulberry/host/global"
+	"mulberry/app/downstream/model"
+	"mulberry/app/downstream/requests"
+	"mulberry/app/downstream/service"
+	commonModel "mulberry/common/model"
+	"mulberry/global"
+	"mulberry/pkg/utils"
 	"path/filepath"
 	"strconv"
 )

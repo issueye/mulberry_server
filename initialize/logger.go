@@ -1,9 +1,9 @@
 package initialize
 
 import (
-	"mulberry/common/logger"
-	"mulberry/host/common/config"
-	"mulberry/host/global"
+	"mulberry/common/config"
+	"mulberry/global"
+	"mulberry/pkg/logger"
 	"path/filepath"
 )
 

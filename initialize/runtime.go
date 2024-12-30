@@ -2,7 +2,7 @@ package initialize
 
 import (
 	"fmt"
-	"mulberry/host/global"
+	"mulberry/global"
 	"os"
 )
 

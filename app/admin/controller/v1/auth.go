@@ -1,10 +1,10 @@
 package v1
 
 import (
-	"mulberry/host/app/admin/logic"
-	"mulberry/host/app/admin/requests"
-	"mulberry/host/app/admin/response"
-	"mulberry/host/common/controller"
+	"mulberry/app/admin/logic"
+	"mulberry/app/admin/requests"
+	"mulberry/app/admin/response"
+	"mulberry/common/controller"
 
 	"github.com/gin-gonic/gin"
 )

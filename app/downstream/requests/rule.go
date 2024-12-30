@@ -2,8 +2,8 @@ package requests
 
 import (
 	"encoding/json"
-	"mulberry/host/app/downstream/model"
-	commonModel "mulberry/host/common/model"
+	"mulberry/app/downstream/model"
+	commonModel "mulberry/common/model"
 )
 
 type CreateRule struct {

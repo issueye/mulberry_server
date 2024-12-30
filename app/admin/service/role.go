@@ -2,11 +2,11 @@ package service
 
 import (
 	"fmt"
-	"mulberry/host/app/admin/model"
-	"mulberry/host/app/admin/requests"
-	commonModel "mulberry/host/common/model"
-	"mulberry/host/common/service"
-	"mulberry/host/global"
+	"mulberry/app/admin/model"
+	"mulberry/app/admin/requests"
+	commonModel "mulberry/common/model"
+	"mulberry/common/service"
+	"mulberry/global"
 
 	"gorm.io/gorm"
 )

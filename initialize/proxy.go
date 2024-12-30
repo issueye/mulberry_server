@@ -2,7 +2,7 @@ package initialize
 
 import (
 	"context"
-	"mulberry/host/app/downstream/engine"
+	"mulberry/app/downstream/engine"
 )
 
 func InitEngine(ctx context.Context) {

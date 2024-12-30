@@ -1,11 +1,11 @@
 package initialize
 
 import (
-	"mulberry/common/db"
-	"mulberry/host/app/admin/logic"
-	adminModel "mulberry/host/app/admin/model"
-	downstreamModel "mulberry/host/app/downstream/model"
-	"mulberry/host/global"
+	"mulberry/app/admin/logic"
+	adminModel "mulberry/app/admin/model"
+	downstreamModel "mulberry/app/downstream/model"
+	"mulberry/global"
+	"mulberry/pkg/db"
 	"path/filepath"
 
 	_ "github.com/ncruces/go-sqlite3/driver"

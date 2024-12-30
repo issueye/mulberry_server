@@ -1,6 +1,6 @@
 package response
 
-import "mulberry/host/app/admin/model"
+import "mulberry/app/admin/model"
 
 type Auth struct {
 	Token string `json:"token"`

@@ -3,10 +3,10 @@ package main
 import (
 	"embed"
 	"io/fs"
-	"mulberry/host/global"
-	"mulberry/host/initialize"
-	"mulberry/host/pages/home"
-	_ "mulberry/host/winappres"
+	"mulberry/global"
+	"mulberry/initialize"
+	"mulberry/pages/home"
+	_ "mulberry/winappres"
 
 	"github.com/ying32/govcl/vcl"
 )

@@ -2,11 +2,11 @@ package logic
 
 import (
 	"errors"
-	"mulberry/host/app/admin/model"
-	"mulberry/host/app/admin/requests"
-	"mulberry/host/app/admin/service"
-	commonModel "mulberry/host/common/model"
-	"mulberry/host/global"
+	"mulberry/app/admin/model"
+	"mulberry/app/admin/requests"
+	"mulberry/app/admin/service"
+	commonModel "mulberry/common/model"
+	"mulberry/global"
 )
 
 func SaveRoleMenus(code string, menu_codes []string) error {

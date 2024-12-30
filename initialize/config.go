@@ -2,8 +2,8 @@ package initialize
 
 import (
 	"fmt"
-	"mulberry/host/common/config"
-	"mulberry/host/global"
+	"mulberry/common/config"
+	"mulberry/global"
 	"os"
 )
 
