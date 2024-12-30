@@ -1,6 +1,7 @@
 package service
 
 import (
+	"errors"
 	"mulberry/host/common/model"
 	"mulberry/host/global"
 
@@ -46,6 +47,7 @@ func NewSrv[T any](base BaseService[T], args ...any) BaseService[T] {
 
 	if gdb != nil {
 		if isTx {
+			base.IsTX = true
 			base.TX = gdb
 		} else {
 			base.DB = gdb
@@ -55,6 +57,29 @@ func NewSrv[T any](base BaseService[T], args ...any) BaseService[T] {
 	}
 
 	return base
+}
+
+func (b *BaseService[T]) Begin() {
+	if !b.IsTX {
+		b.IsTX = true
+		b.TX = b.DB.Begin()
+	}
+}
+
+func (b *BaseService[T]) Rollback() error {
+	if !b.IsTX {
+		return errors.New("当前不是事务")
+	}
+
+	return b.TX.Rollback().Error
+}
+
+func (b *BaseService[T]) Commit() error {
+	if !b.IsTX {
+		return errors.New("当前不是事务")
+	}
+
+	return b.TX.Commit().Error
 }
 
 // 根据ID查询数据
@@ -124,6 +149,16 @@ func (b *BaseService[T]) Create(data *T) error {
 // 删除数据
 func (b *BaseService[T]) Delete(id uint) error {
 	return b.GetDB().Model(new(T)).Where("id = ?", id).Delete(new(T)).Error
+}
+
+func (b *BaseService[T]) DeleteByFields(condition map[string]any) error {
+	del := b.GetDB().Model(new(T))
+
+	for k, v := range condition {
+		del = del.Where(k+" = ?", v)
+	}
+
+	return del.Delete(new(T)).Error
 }
 
 func (b *BaseService[T]) GetAllCount() (int64, error) {
