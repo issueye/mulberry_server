@@ -1,6 +1,7 @@
 package logic
 
 import (
+	"fmt"
 	"mulberry/app/downstream/engine"
 	"mulberry/app/downstream/model"
 	"mulberry/app/downstream/requests"
@@ -19,7 +20,53 @@ func UpdatePort(req *requests.UpdatePort) error {
 }
 
 func DeletePort(id uint) error {
-	return service.NewPort(global.DB, false).Delete(id)
+	var (
+		err   error
+		pInfo *model.PortInfo
+	)
+
+	db := global.DB.Begin()
+	pSrv := service.NewPort(db, true)
+	defer func() {
+		if err != nil {
+			err := pSrv.Rollback()
+			if err != nil {
+				global.Logger.Sugar().Errorf("数据回滚失败 %s", err.Error())
+			}
+
+			return
+		}
+
+		err := pSrv.Commit()
+		if err != nil {
+			global.Logger.Sugar().Errorf("提交事务失败 %s", err.Error())
+		}
+	}()
+
+	pInfo, err = pSrv.GetById(id)
+	if err != nil {
+		return err
+	}
+
+	if pInfo.Status {
+		err = fmt.Errorf("端口[%d]正在监听中...不能删除", pInfo.Port)
+		return err
+	}
+
+	err = pSrv.Delete(id)
+	if err != nil {
+		return err
+	}
+
+	pageSrv := service.NewPage(pSrv.TX, true)
+	err = pageSrv.DeleteByFields(map[string]any{"port": pInfo.Port})
+	if err != nil {
+		return err
+	}
+
+	ruleSrv := service.NewRule(pSrv.TX, true)
+	err = ruleSrv.DeleteByFields(map[string]any{"port": pInfo.Port})
+	return err
 }
 
 func PortList(condition *commonModel.PageQuery[*requests.QueryPort]) (*commonModel.ResPage[model.PortInfo], error) {
