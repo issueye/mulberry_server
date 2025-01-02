@@ -1,10 +1,7 @@
 package initialize
 
 import (
-	"fmt"
 	"mulberry/common/config"
-	"mulberry/global"
-	"os"
 )
 
 func InitConfig() {
@@ -22,9 +19,4 @@ func InitConfig() {
 
 	// 初始化 jwt key 随机生成的码
 	config.SetParamExist(config.JWT, "jwt-secret-key", "jwt 密钥", "pkkwmjjum5hvfqybnbxo97ol2spriy49")
-
-	// 初始化 客户端 路径
-	pwd, _ := os.Getwd()
-	path := fmt.Sprintf("%s/%s/client.exe", pwd, global.ROOT_PATH)
-	config.SetParamExist(config.SERVER, "client-path", "客户端路径", path)
 }

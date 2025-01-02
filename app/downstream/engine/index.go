@@ -8,11 +8,22 @@ import (
 	"mulberry/app/downstream/service"
 	"mulberry/global"
 	"net/http"
+	"regexp"
 	"strings"
 	"sync"
 
 	"github.com/gin-gonic/gin"
 	"github.com/gorilla/mux"
+)
+
+// 协议类型
+type ProtocolType string
+
+const (
+	HTTP  ProtocolType = "http://"
+	HTTPS ProtocolType = "https://"
+	WS    ProtocolType = "ws://"
+	WSS   ProtocolType = "wss://"
 )
 
 type ActionType int
@@ -70,14 +81,23 @@ type GrapeEngine struct {
 	Rules       []*RouteRule // 节点规则列表
 }
 
+type MatchType int
+
+const (
+	MT_EXACT  MatchType = 0 // 精确匹配
+	MT_PREFIX           = 1 // 前缀匹配
+	MT_REGEX            = 2 // 正则匹配
+)
+
 type RouteRule struct {
-	Name      string              `json:"name"`    // 匹配规则
-	Target    string              `json:"target"`  // 目标地址
-	Route     string              `json:"route"`   // 路由
-	Page      string              `json:"Page"`    // 节点
-	Method    string              `json:"method"`  // 方法
-	HttpProxy *CustomReverseProxy `json:"proxy"`   // HTTP代理转发
-	WsProxy   *WebsocketProxy     `json:"wsProxy"` // WS代理转发
+	Name      string              `json:"name"`      // 匹配规则
+	Target    string              `json:"target"`    // 目标地址
+	Route     string              `json:"route"`     // 路由
+	Page      string              `json:"Page"`      // 节点
+	Method    string              `json:"method"`    // 方法
+	MatchType MatchType           `json:"matchType"` // 匹配类型
+	HttpProxy *CustomReverseProxy `json:"proxy"`     // HTTP代理转发
+	WsProxy   *WebsocketProxy     `json:"wsProxy"`   // WS代理转发
 	Handler   muxHandler          // 方法
 }
 
@@ -98,10 +118,6 @@ func NewGrapeEngine(port model.PortInfo) *GrapeEngine {
 func (grape *GrapeEngine) Init() error {
 
 	if grape.UseGzip {
-		// err := grape.GinGzipFilter()
-		// if err != nil {
-		// 	return err
-		// }
 	}
 
 	// 自定义路由
@@ -192,7 +208,7 @@ func (grape *GrapeEngine) CustomRoutes() error {
 		global.Logger.Sugar().Infof("[%s] 是否是WS: %v", rule.Name, rule.IsWs)
 		if rule.IsWs {
 			//TODO url 需要重新处理一下
-			addr := fmt.Sprintf("ws://%s%s", custom.Target, rule.TargetRoute)
+			addr := fmt.Sprintf("%s%s%s", WS, custom.Target, rule.TargetRoute)
 			wsProxy, err := NewProxy(addr, nil)
 			if err != nil {
 				global.Logger.Sugar().Errorf("创建WS代理失败 %s", err.Error())
@@ -205,7 +221,7 @@ func (grape *GrapeEngine) CustomRoutes() error {
 			}
 		} else {
 			// http 代理
-			addr := fmt.Sprintf("http://%s", custom.Target)
+			addr := fmt.Sprintf("%s%s", HTTP, custom.Target)
 			httpProxy, err := NewReverseProxy(addr)
 			if err != nil {
 				global.Logger.Sugar().Error("创建HTTP代理失败 %s", err.Error())
@@ -249,7 +265,20 @@ func (grape *GrapeEngine) CustomRoutes() error {
 			name := strings.TrimSuffix(custom.Name, "/*path")
 			r = grape.PathPrefix(name).Handler(http.StripPrefix(name, http.HandlerFunc(custom.Handler)))
 		} else {
-			r = grape.HandleFunc(custom.Name, custom.Handler)
+			switch custom.MatchType {
+			case MT_EXACT: // 精确匹配
+				r = grape.HandleFunc(custom.Name, custom.Handler)
+			case MT_PREFIX: // 前缀匹配
+				r = grape.PathPrefix(custom.Name).Handler(http.HandlerFunc(custom.Handler))
+			case MT_REGEX: // 正则匹配
+				{
+					r = grape.MatcherFunc(func(r *http.Request, rm *mux.RouteMatch) bool {
+						// 匹配正则表达式
+						matched, _ := regexp.MatchString(custom.Name, r.URL.Path)
+						return matched
+					})
+				}
+			}
 		}
 
 		switch strings.ToUpper(custom.Method) {

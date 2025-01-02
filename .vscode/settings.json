@@ -19,6 +19,7 @@
         "goleak",
         "gonic",
         "govcl",
+        "hvfqybnbxo",
         "iasm",
         "josharian",
         "jsonpointer",
@@ -43,6 +44,7 @@
         "oklog",
         "optparse",
         "patrickmn",
+        "pkkwmjjum",
         "pmezard",
         "Puerkito",
         "purell",
@@ -50,8 +52,10 @@
         "regexs",
         "resty",
         "rogpeppe",
+        "rsrc",
         "shortuuid",
         "SLXVDP",
+        "spriy",
         "sqldb",
         "stdr",
         "stretchr",
@@ -67,7 +71,6 @@
         "winappres",
         "windowsgui",
         "winres",
-        "ying",
-        "rsrc"
+        "ying"
     ]
 }
