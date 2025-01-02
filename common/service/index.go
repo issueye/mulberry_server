@@ -136,6 +136,15 @@ func (b *BaseService[T]) UpdateByField(field string, value any, data map[string]
 	return b.GetDB().Model(new(T)).Where(field+" = ?", value).Updates(data).Error
 }
 
+func (b *BaseService[T]) UpdatedatasByMap(conditions map[string]any, data map[string]any) error {
+	db := b.GetDB().Model(new(T))
+	for k, v := range conditions {
+		db = db.Where(k+" =?", v)
+	}
+
+	return db.Updates(data).Error
+}
+
 // 更新ID更新数据(结构体)
 func (b *BaseService[T]) Update(id uint, data *T) error {
 	return b.GetDB().Model(new(T)).Where("id = ?", id).Updates(data).Error

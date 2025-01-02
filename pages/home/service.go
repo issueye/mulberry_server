@@ -8,6 +8,7 @@ import (
 	"mulberry/initialize"
 	"mulberry/pages"
 	"os"
+	"os/exec"
 	"runtime"
 	"time"
 
@@ -17,6 +18,21 @@ import (
 // 初始化数据
 func (f *TFrmHome) InitData() {
 
+}
+
+func openBrowser(url string) error {
+	var cmd *exec.Cmd
+	switch runtime.GOOS {
+	case "windows":
+		cmd = exec.Command("cmd", "/c", "start", url)
+	case "linux":
+		cmd = exec.Command("xdg-open", url)
+	case "darwin":
+		cmd = exec.Command("open", url)
+	default:
+		return fmt.Errorf("unsupported operating system")
+	}
+	return cmd.Start()
 }
 
 func (f *TFrmHome) EventMonitor(ctx context.Context) {

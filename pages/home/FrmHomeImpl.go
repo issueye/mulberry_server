@@ -3,6 +3,7 @@ package home
 import (
 	"context"
 	"fmt"
+	"mulberry/common/config"
 	"mulberry/global"
 	"mulberry/pages/about"
 	"time"
@@ -56,6 +57,7 @@ func (f *TFrmHome) SetEvents() {
 
 	f.PM_close.SetOnClick(f.OnAppCloseClick)
 	f.PM_show.SetOnClick(f.OnAppShowClick)
+	f.PM_open_web_page.SetOnClick(f.OnOpenWebPageClick)
 	f.Btn_server_run.SetOnClick(f.OnBtn_server_runClick)
 	f.Btn_clear_log.SetOnClick(f.OnBtn_clear_logClick)
 
@@ -102,6 +104,12 @@ func (f *TFrmHome) OnAppCloseClick(sender vcl.IObject) {
 
 func (f *TFrmHome) OnAppShowClick(sender vcl.IObject) {
 	f.Show()
+}
+
+func (f *TFrmHome) OnOpenWebPageClick(sender vcl.IObject) {
+	port := config.GetParam(config.SERVER, "port", 6678).Int()
+	url := fmt.Sprintf("http://127.0.0.1:%d/web", port)
+	openBrowser(url)
 }
 
 func (f *TFrmHome) OnAboutClick(sender vcl.IObject) {

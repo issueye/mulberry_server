@@ -7,6 +7,7 @@ import (
 	commonModel "mulberry/common/model"
 	"mulberry/global"
 	"mulberry/pkg/utils"
+	"slices"
 	"time"
 )
 
@@ -23,6 +24,12 @@ func TrafficMessages(condition *commonModel.PageQuery[*requests.QueryTraffic]) (
 
 		list = append(list, statistics)
 		return nil
+	})
+
+	// 排序
+	slices.SortFunc(list, func(a *model.TrafficStatistics, b *model.TrafficStatistics) int {
+		// 按照时间倒序
+		return int(b.Request.Time.Unix() - a.Request.Time.Unix())
 	})
 
 	condition.Total = len(list)

@@ -135,3 +135,12 @@ func ModifyUseGZ(port uint) error {
 	// 修改状态
 	return srv.UpdateByField("port", port, map[string]any{"use_gzip": !info.UseGzip})
 }
+
+func InitPort() {
+	srv := service.NewPort()
+	// 修改所有端口号的状态为停止
+	err := srv.UpdatedatasByMap(map[string]any{"status": 1}, map[string]any{"status": 0})
+	if err != nil {
+		global.Logger.Sugar().Errorf("初始化端口状态失败 %s", err.Error())
+	}
+}

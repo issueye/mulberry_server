@@ -3,6 +3,7 @@ package initialize
 import (
 	"mulberry/app/admin/logic"
 	adminModel "mulberry/app/admin/model"
+	dsLogic "mulberry/app/downstream/logic"
 	downstreamModel "mulberry/app/downstream/model"
 	"mulberry/global"
 	"mulberry/pkg/db"
@@ -35,11 +36,15 @@ func InitDATA(db *gorm.DB) {
 	db.AutoMigrate(&downstreamModel.CertInfo{})
 	db.AutoMigrate(&downstreamModel.TargetInfo{})
 
+	// admin
 	logic.InitRoles()
 	logic.InitRoleMenus()
 	logic.InitUserRole()
 	logic.InitAdminUser()
 	logic.InitMenus()
+
+	// downstream
+	dsLogic.InitPort()
 }
 
 func FreeDB() {
