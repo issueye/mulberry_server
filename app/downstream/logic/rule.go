@@ -23,6 +23,8 @@ func UpdateRule(req *requests.UpdateRule) error {
 	data["order"] = req.Order
 	data["remark"] = req.Remark
 	data["status"] = req.Status
+	data["match_type"] = req.MatchType
+	data["headers"] = req.Headers
 
 	if req.IsWs {
 		data["is_ws"] = 1
