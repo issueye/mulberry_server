@@ -200,120 +200,122 @@ func (grape *GrapeEngine) CustomRoutes() error {
 			continue
 		}
 
-		headers := make(map[string]string)
-		if rule.Headers != nil {
-			for _, v := range *rule.Headers {
-				headers[v.K] = v.V
-			}
-		}
-
 		custom := &RouteRule{
 			Name:      rule.Name,
 			Target:    tInfo.Name,
 			Route:     rule.TargetRoute,
 			Method:    rule.Method,
-			Headers:   headers, // 添加 Header 匹配规则
+			Headers:   parseHeaders(rule.Headers), // 添加 Header 匹配规则
 			MatchType: MatchType(rule.MatchType),
 		}
 
 		// 处理 WebSocket 路由
 		if rule.IsWs {
-			addr := fmt.Sprintf("%s%s%s", WS, custom.Target, rule.TargetRoute)
-			wsProxy, err := NewProxy(addr, nil)
-			if err != nil {
-				global.Logger.Sugar().Errorf("创建WS代理失败 %s", err.Error())
+			if err := grape.setupWebSocketProxy(custom, rule); err != nil {
+				global.Logger.Sugar().Errorf("创建WS代理失败: %s", err.Error())
 				continue
-			}
-
-			custom.WsProxy = wsProxy
-			custom.Handler = func(w http.ResponseWriter, r *http.Request) {
-				custom.WsProxy.ServeHTTP(w, r)
 			}
 		} else {
-			// 处理 HTTP 路由
-			addr := fmt.Sprintf("%s%s", HTTP, custom.Target)
-			httpProxy, err := NewReverseProxy(addr)
-			if err != nil {
-				global.Logger.Sugar().Error("创建HTTP代理失败 %s", err.Error())
+			if err := grape.setupHTTPProxy(custom); err != nil {
+				global.Logger.Sugar().Errorf("创建HTTP代理失败: %s", err.Error())
 				continue
-			}
-
-			custom.HttpProxy = httpProxy
-			custom.Handler = func(w http.ResponseWriter, r *http.Request) {
-
-				path := r.URL.Path
-				switch custom.MatchType {
-				case MT_PREFIX:
-					{
-						// 替换匹配路由 Name 的前缀为目标路 Route 由的前缀
-						path = strings.Replace(path, custom.Name, custom.Route, 1)
-						r.URL.Path = path
-					}
-				case MT_REGEX:
-					{
-						// 将正则匹配的路由 替换为目标路由
-						// 匹配正则表达式
-						re := regexp.MustCompile(custom.Name)
-						// 替换匹配的部分为目标路由
-						path = re.ReplaceAllString(path, custom.Route)
-						r.URL.Path = path
-					}
-				}
-
-				custom.HttpProxy.ServeHTTP(w, r)
 			}
 		}
 
 		grape.Rules = append(grape.Rules, custom)
 	}
 
-	routesMsg := ""
+	grape.registerRoutes()
+	return nil
+}
 
-	// 注册路由到路由器
-	for _, custom := range grape.Rules {
-		var r *mux.Route
-
-		routesMsg += fmt.Sprintf("方法[%s] 代理路由[%s] -> 目标路由[%s]\n", custom.Method, custom.Name, custom.Route)
-
-		switch custom.MatchType {
-		case MT_EXACT: // 精确匹配
-			r = grape.HandleFunc(custom.Name, custom.Handler)
-		case MT_PREFIX: // 前缀匹配
-			r = grape.PathPrefix(custom.Name).Handler(http.HandlerFunc(custom.Handler))
-		case MT_REGEX: // 正则匹配
-			r = grape.MatcherFunc(func(r *http.Request, rm *mux.RouteMatch) bool {
-				matched, _ := regexp.MatchString(custom.Name, r.URL.Path)
-				return matched
-			}).Handler(http.HandlerFunc(custom.Handler))
-		default:
-			r = grape.HandleFunc(custom.Name, custom.Handler)
-		}
-
-		// 设置 HTTP 方法
-		switch strings.ToUpper(custom.Method) {
-		case "POST":
-			r.Methods("POST")
-		case "GET":
-			r.Methods("GET")
-		case "PUT":
-			r.Methods("PUT")
-		case "PATCH":
-			r.Methods("PATCH")
-		case "DELETE":
-			r.Methods("DELETE")
-		}
-
-		// Add Header matching
-		if len(custom.Headers) > 0 {
-			for k, v := range custom.Headers {
-				r.Headers(k, v)
-			}
+func parseHeaders(headers *model.Headers) map[string]string {
+	result := make(map[string]string)
+	if headers != nil {
+		for _, v := range *headers {
+			result[v.K] = v.V
 		}
 	}
+	return result
+}
 
-	global.Logger.Sugar().Infof("代理路由:\n%s\n", routesMsg)
+func (grape *GrapeEngine) setupWebSocketProxy(custom *RouteRule, rule *model.RuleInfo) error {
+	addr := fmt.Sprintf("%s%s%s", WS, custom.Target, rule.TargetRoute)
+	wsProxy, err := NewProxy(addr, nil)
+	if err != nil {
+		return err
+	}
+	custom.WsProxy = wsProxy
+	custom.Handler = wsProxy.ServeHTTP
+	return nil
+}
+
+func (grape *GrapeEngine) setupHTTPProxy(custom *RouteRule) error {
+	// 处理 HTTP 路由
+	addr := fmt.Sprintf("%s%s", HTTP, custom.Target)
+	httpProxy, err := NewReverseProxy(addr)
+	if err != nil {
+		global.Logger.Sugar().Error("创建HTTP代理失败 %s", err.Error())
+		return err
+	}
+
+	custom.HttpProxy = httpProxy
+	custom.Handler = func(w http.ResponseWriter, r *http.Request) {
+
+		path := r.URL.Path
+		switch custom.MatchType {
+		case MT_PREFIX:
+			{
+				// 替换匹配路由 Name 的前缀为目标路 Route 由的前缀
+				path = strings.Replace(path, custom.Name, custom.Route, 1)
+				r.URL.Path = path
+			}
+		case MT_REGEX:
+			{
+				// 将正则匹配的路由 替换为目标路由
+				// 匹配正则表达式
+				re := regexp.MustCompile(custom.Name)
+				// 替换匹配的部分为目标路由
+				path = re.ReplaceAllString(path, custom.Route)
+				r.URL.Path = path
+			}
+		}
+
+		custom.HttpProxy.ServeHTTP(w, r)
+	}
 
 	return nil
+}
+
+func (grape *GrapeEngine) registerRoutes() {
+	routesMsg := ""
+	for _, custom := range grape.Rules {
+		routesMsg += fmt.Sprintf("方法[%s] 代理路由[%s] -> 目标路由[%s]\n", custom.Method, custom.Name, custom.Route)
+		grape.registerRoute(custom)
+	}
+	global.Logger.Sugar().Infof("代理路由:\n%s\n", routesMsg)
+}
+
+func (grape *GrapeEngine) registerRoute(custom *RouteRule) {
+	var r *mux.Route
+	switch custom.MatchType {
+	case MT_EXACT:
+		r = grape.HandleFunc(custom.Name, custom.Handler)
+	case MT_PREFIX:
+		r = grape.PathPrefix(custom.Name).Handler(http.HandlerFunc(custom.Handler))
+	case MT_REGEX:
+		r = grape.MatcherFunc(func(r *http.Request, rm *mux.RouteMatch) bool {
+			matched, _ := regexp.MatchString(custom.Name, r.URL.Path)
+			return matched
+		}).Handler(http.HandlerFunc(custom.Handler))
+	default:
+		r = grape.HandleFunc(custom.Name, custom.Handler)
+	}
+
+	r.Methods(strings.ToUpper(custom.Method))
+	for k, v := range custom.Headers {
+		r.Headers(k, v)
+	}
 }
 
 func (grape *GrapeEngine) Run() error {
