@@ -14,6 +14,7 @@ import (
 
 	"github.com/gin-gonic/gin"
 	"github.com/gorilla/mux"
+	"github.com/liushuochen/gotable"
 )
 
 // 协议类型
@@ -288,12 +289,25 @@ func (grape *GrapeEngine) setupHTTPProxy(custom *RouteRule) error {
 }
 
 func (grape *GrapeEngine) registerRoutes() {
-	routesMsg := ""
+	table, err := gotable.Create("方法", "代理路由", "目标路由")
+	if err != nil {
+		return
+	}
+
+	values := []map[string]string{}
+
 	for _, custom := range grape.Rules {
-		routesMsg += fmt.Sprintf("方法[%s] 代理路由[%s] -> 目标路由[%s]\n", custom.Method, custom.Name, custom.Route)
+		values = append(values, map[string]string{
+			"方法":   custom.Method,
+			"代理路由": custom.Name,
+			"目标路由": custom.Route,
+		})
 		grape.registerRoute(custom)
 	}
-	global.Logger.Sugar().Infof("代理路由:\n%s\n", routesMsg)
+
+	table.AddRows(values)
+	tableStr := table.String()
+	global.Logger.Sugar().Infof("\n%s", tableStr)
 }
 
 func (grape *GrapeEngine) registerRoute(custom *RouteRule) {
@@ -312,7 +326,11 @@ func (grape *GrapeEngine) registerRoute(custom *RouteRule) {
 		r = grape.HandleFunc(custom.Name, custom.Handler)
 	}
 
-	r.Methods(strings.ToUpper(custom.Method))
+	method := strings.ToUpper(custom.Method)
+	if method != "ANY" {
+		r.Methods(strings.ToUpper(custom.Method))
+	}
+
 	for k, v := range custom.Headers {
 		r.Headers(k, v)
 	}
