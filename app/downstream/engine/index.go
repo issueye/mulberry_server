@@ -37,7 +37,8 @@ const (
 
 type Port struct {
 	model.PortInfo
-	Action ActionType
+	Action   ActionType
+	Protocol string
 }
 
 // 存放 http server 对象
