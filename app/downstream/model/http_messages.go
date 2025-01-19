@@ -5,6 +5,21 @@ import (
 	"time"
 )
 
+// PortForwardingStatistics 端口转发流量统计
+type PortForwardingStatistics struct {
+	TotalRequests  int64              `json:"total_requests"`  // 总请求数
+	TotalInBytes   int64              `json:"total_in_bytes"`  // 总输入字节数
+	TotalOutBytes  int64              `json:"total_out_bytes"` // 总输出字节数
+	PortStatistics map[int]*PortStats `json:"port_statistics"` // 按端口统计
+}
+
+// PortStats 单个端口的流量统计
+type PortStats struct {
+	Requests int64 `json:"requests"`  // 请求数
+	InBytes  int64 `json:"in_bytes"`  // 输入字节数
+	OutBytes int64 `json:"out_bytes"` // 输出字节数
+}
+
 type TrafficStatistics struct {
 	ID       string        `json:"id"`       // 数据编码
 	Request  *HttpRequest  `json:"request"`  // 响应信息

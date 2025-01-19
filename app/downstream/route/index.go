@@ -65,5 +65,6 @@ func Register(r *gin.RouterGroup) {
 	proxy := r.Group("proxy")
 	{
 		proxy.POST("traffic_messages", v1.TrafficMessages)
+		proxy.GET("port_forwarding_statistics", v1.PortForwardingStatistics)
 	}
 }
