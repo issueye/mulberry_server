@@ -254,8 +254,30 @@ func (grape *GrapeEngine) setupWebSocketProxy(custom *RouteRule, rule *model.Rul
 
 func (grape *GrapeEngine) setupHTTPProxy(custom *RouteRule) error {
 	// 处理 HTTP 路由
+	var tlsConfig *TLSConfig
+	var err error
+
+	// Check if HTTPS is needed
+	if strings.HasPrefix(custom.Target, "https://") {
+		// Load certificate from database
+		certSrv := service.NewCert()
+		certInfo, err := certSrv.GetByField("name", custom.Target)
+		if err != nil {
+			global.Logger.Sugar().Error("获取证书失败 %s", err.Error())
+			return err
+		}
+
+		tlsConfig, err = NewTLSConfig(&model.CertInfo{
+			CertBase: certInfo.CertBase,
+		})
+		if err != nil {
+			global.Logger.Sugar().Error("创建TLS配置失败 %s", err.Error())
+			return err
+		}
+	}
+
 	addr := fmt.Sprintf("%s%s", HTTP, custom.Target)
-	httpProxy, err := NewReverseProxy(addr)
+	httpProxy, err := NewReverseProxy(addr, tlsConfig)
 	if err != nil {
 		global.Logger.Sugar().Error("创建HTTP代理失败 %s", err.Error())
 		return err

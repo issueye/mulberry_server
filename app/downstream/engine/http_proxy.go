@@ -3,6 +3,7 @@ package engine
 import (
 	"bytes"
 	"context"
+	"crypto/tls"
 	"encoding/json"
 	"fmt"
 	"io"
@@ -19,9 +20,10 @@ import (
 
 type CustomReverseProxy struct {
 	*httputil.ReverseProxy
+	tlsConfig *TLSConfig
 }
 
-func NewReverseProxy(targetURL string) (*CustomReverseProxy, error) {
+func NewReverseProxy(targetURL string, tlsConfig *TLSConfig) (*CustomReverseProxy, error) {
 	// 解析目标URL
 	target, err := url.Parse(targetURL)
 	if err != nil {
@@ -29,13 +31,24 @@ func NewReverseProxy(targetURL string) (*CustomReverseProxy, error) {
 		return nil, err
 	}
 
+	// 创建transport
+	transport := http.DefaultTransport.(*http.Transport).Clone()
+	if tlsConfig != nil {
+		transport.TLSClientConfig = &tls.Config{
+			Certificates:       []tls.Certificate{*tlsConfig.Cert},
+			RootCAs:            tlsConfig.RootCAs,
+			InsecureSkipVerify: false,
+		}
+	}
+
 	// 创建反向代理实例
 	proxy := &CustomReverseProxy{
 		ReverseProxy: &httputil.ReverseProxy{
 			Director:       director(target),
 			ModifyResponse: modifyResponse,
-			Transport:      &myRoundTripper{http.DefaultTransport},
+			Transport:      &myRoundTripper{transport},
 		},
+		tlsConfig: tlsConfig,
 	}
 
 	return proxy, nil

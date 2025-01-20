@@ -49,15 +49,28 @@ func (p *TCPProxy) Serve(conn net.Conn) {
 	// Start proxying
 	go p.copyData(ctx, conn, targetConn, traffic, true) // client -> target
 	p.copyData(ctx, targetConn, conn, traffic, false)   // target -> client
-
-	// Save traffic stats
-	trafficInfo, _ := json.Marshal(traffic)
-	nowDateStr := time.Now().Format("2006-01-02")
-	saveKey := fmt.Sprintf("TRAFFIC:%s:%d", nowDateStr, utils.GenID())
-	global.STORE.Set(saveKey, trafficInfo)
 }
 
-func (p *TCPProxy) copyData(ctx context.Context, src, dst net.Conn, traffic *model.TrafficStatistics, isRequest bool) {
+// Save traffic stats
+func (p *TCPProxy) saveTraffic(traffic *model.TrafficStatistics) {
+	trafficInfo, err := json.Marshal(traffic)
+	if err != nil {
+		global.Logger.Sugar().Errorf("Failed to marshal traffic info: %s", err.Error())
+		return
+	}
+
+	nowDateStr := time.Now().Format("2006-01-02")
+	saveKey := fmt.Sprintf("TRAFFIC:%s:%d", nowDateStr, utils.GenID())
+	if err := global.STORE.Set(saveKey, trafficInfo); err != nil {
+		global.Logger.Sugar().Errorf("Failed to save traffic info: %s", err.Error())
+	}
+}
+
+func (p *TCPProxy) copyData(_ context.Context, src, dst net.Conn, traffic *model.TrafficStatistics, isRequest bool) {
+	defer func() {
+		p.saveTraffic(traffic)
+	}()
+
 	buf := make([]byte, 32*1024)
 	for {
 		n, err := src.Read(buf)
