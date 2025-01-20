@@ -11,26 +11,15 @@ import (
 type TFrmHome struct {
 	*vcl.TForm
 	StatusBar        *vcl.TStatusBar
-	Pnl_main         *vcl.TPanel
-	Pnl_header       *vcl.TPanel
 	Pnl_info         *vcl.TPanel
 	Lbl_name         *vcl.TLabel
 	Lbl_port         *vcl.TLabel
-	Pnl_actions      *vcl.TPanel
-	Btn_server_run   *vcl.TSpeedButton
-	Btn_clear_log    *vcl.TSpeedButton
-	Pnl_body         *vcl.TPanel
-	Mmo_run_log      *vcl.TMemo
-	Main_menu        *vcl.TMainMenu
-	Meu_item_help    *vcl.TMenuItem
-	Meu_item_about   *vcl.TMenuItem
-	Timer            *vcl.TTimer
+	Lbl_version      *vcl.TLabel
 	Tray_icon        *vcl.TTrayIcon
 	P_menu           *vcl.TPopupMenu
+	PM_open_web_page *vcl.TMenuItem
 	PM_show          *vcl.TMenuItem
 	PM_close         *vcl.TMenuItem
-	IList            *vcl.TImageList
-	PM_open_web_page *vcl.TMenuItem
 
 	// ::private::
 	TFrmHomeFields

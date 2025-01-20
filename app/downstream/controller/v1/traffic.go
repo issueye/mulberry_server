@@ -37,3 +37,25 @@ func TrafficMessages(c *gin.Context) {
 
 	ctl.SuccessData(list)
 }
+
+// PortForwardingStatistics doc
+//
+//	@tags			查询
+//	@Summary		查询端口转发流量统计
+//	@Description	查询端口转发流量统计信息
+//	@Produce		json
+//	@Success		200	{object}	controller.Response	"code: 200 成功"
+//	@Failure		500	{object}	controller.Response						"错误返回内容"
+//	@Router			/api/v1/traffic/port-forwarding [get]
+//	@Security		ApiKeyAuth
+func PortForwardingStatistics(c *gin.Context) {
+	ctl := controller.New(c)
+
+	stats, err := logic.PortForwardingTraffic()
+	if err != nil {
+		ctl.FailWithError(err)
+		return
+	}
+
+	ctl.SuccessData(stats)
+}

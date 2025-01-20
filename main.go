@@ -1,6 +1,7 @@
 package main
 
 import (
+	"context"
 	"embed"
 	"io/fs"
 	"mulberry/global"
@@ -25,6 +26,9 @@ var webDir embed.FS
 func main() {
 	staticFp, _ := fs.Sub(webDir, "web")
 	global.S_WEB = staticFp
-	initialize.InitRuntime()
+
+	ctx := context.Background()
+	initialize.RunServer(ctx)
 	vcl.RunApp(&home.FrmHome)
+	initialize.StopServer()
 }
