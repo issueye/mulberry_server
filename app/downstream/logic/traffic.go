@@ -66,7 +66,8 @@ func PortForwardingTraffic() (*model.PortForwardingStatistics, error) {
 		stats.TotalOutBytes += statistics.Response.OutHeaderBytes + statistics.Response.OutBodyBytes
 
 		// 按端口统计
-		port := extractPortFromPath(statistics.Request.Path)
+		// port := extractPortFromPath(statistics.Request.Path)
+		port := statistics.Port
 		if port > 0 {
 			if _, exists := stats.PortStatistics[port]; !exists {
 				stats.PortStatistics[port] = &model.PortStats{
@@ -83,12 +84,6 @@ func PortForwardingTraffic() (*model.PortForwardingStatistics, error) {
 	})
 
 	return stats, nil
-}
-
-// isPortForwardingRequest 判断是否为端口转发请求
-func isPortForwardingRequest(path string) bool {
-	// 根据实际端口转发路径模式进行判断
-	return strings.HasPrefix(path, "/forward/")
 }
 
 // extractPortFromPath 从路径中提取端口号

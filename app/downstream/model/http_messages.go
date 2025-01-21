@@ -22,6 +22,7 @@ type PortStats struct {
 
 type TrafficStatistics struct {
 	ID       string        `json:"id"`       // 数据编码
+	Port     int           `json:"port"`     // 端口
 	Request  *HttpRequest  `json:"request"`  // 响应信息
 	Response *HttpResponse `json:"response"` // 响应信息
 }
