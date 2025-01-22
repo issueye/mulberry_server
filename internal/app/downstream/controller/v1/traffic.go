@@ -38,17 +38,17 @@ func TrafficMessages(c *gin.Context) {
 	ctl.SuccessData(list)
 }
 
-// PortForwardingStatistics doc
+// PortStatistics doc
 //
 //	@tags			查询
-//	@Summary		查询端口转发流量统计
-//	@Description	查询端口转发流量统计信息
+//	@Summary		查询端口转发流量统计（按端口分组）
+//	@Description	查询端口转发流量统计信息，按端口分组返回
 //	@Produce		json
-//	@Success		200	{object}	controller.Response	"code: 200 成功"
+//	@Success		200	{object}	controller.Response{data=model.PortForwardingStatistics}	"成功返回带端口统计的数据结构"
 //	@Failure		500	{object}	controller.Response						"错误返回内容"
-//	@Router			/api/v1/traffic/port-forwarding [get]
+//	@Router			/api/v1/traffic/port_statistics [get]
 //	@Security		ApiKeyAuth
-func PortForwardingStatistics(c *gin.Context) {
+func PortStatistics(c *gin.Context) {
 	ctl := controller.New(c)
 
 	stats, err := logic.PortForwardingTraffic()

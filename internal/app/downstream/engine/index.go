@@ -277,7 +277,7 @@ func (grape *GrapeEngine) setupHTTPProxy(custom *RouteRule) error {
 	}
 
 	addr := fmt.Sprintf("%s%s", HTTP, custom.Target)
-	httpProxy, err := NewReverseProxy(addr, tlsConfig)
+	httpProxy, err := NewReverseProxy(int(grape.Port), addr, tlsConfig)
 	if err != nil {
 		global.Logger.Sugar().Error("创建HTTP代理失败 %s", err.Error())
 		return err

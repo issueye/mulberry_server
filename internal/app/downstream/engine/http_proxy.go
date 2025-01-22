@@ -23,7 +23,7 @@ type CustomReverseProxy struct {
 	tlsConfig *TLSConfig
 }
 
-func NewReverseProxy(targetURL string, tlsConfig *TLSConfig) (*CustomReverseProxy, error) {
+func NewReverseProxy(port int, targetURL string, tlsConfig *TLSConfig) (*CustomReverseProxy, error) {
 	// 解析目标URL
 	target, err := url.Parse(targetURL)
 	if err != nil {
@@ -31,22 +31,12 @@ func NewReverseProxy(targetURL string, tlsConfig *TLSConfig) (*CustomReverseProx
 		return nil, err
 	}
 
-	// 创建transport
-	transport := http.DefaultTransport.(*http.Transport).Clone()
-	if tlsConfig != nil {
-		transport.TLSClientConfig = &tls.Config{
-			Certificates:       []tls.Certificate{*tlsConfig.Cert},
-			RootCAs:            tlsConfig.RootCAs,
-			InsecureSkipVerify: false,
-		}
-	}
-
 	// 创建反向代理实例
 	proxy := &CustomReverseProxy{
 		ReverseProxy: &httputil.ReverseProxy{
 			Director:       director(target),
 			ModifyResponse: modifyResponse,
-			Transport:      &myRoundTripper{transport},
+			Transport:      NewMyRoundTripper(port, tlsConfig),
 		},
 		tlsConfig: tlsConfig,
 	}
@@ -69,12 +59,32 @@ func (crw *CustomResponseWriter) Write(b []byte) (int, error) {
 	return crw.ResponseWriter.Write(b)
 }
 
-type myRoundTripper struct {
+type MyRoundTripper struct {
 	http.RoundTripper
+	Port int
 }
 
-func (m *myRoundTripper) RoundTrip(req *http.Request) (*http.Response, error) {
+func NewMyRoundTripper(port int, tlsConfig *TLSConfig) *MyRoundTripper {
+
+    // 创建transport
+	transport := http.DefaultTransport.(*http.Transport).Clone()
+	if tlsConfig != nil {
+		transport.TLSClientConfig = &tls.Config{
+			Certificates:       []tls.Certificate{*tlsConfig.Cert},
+			RootCAs:            tlsConfig.RootCAs,
+			InsecureSkipVerify: false,
+		}
+	}
+
+	return &MyRoundTripper{
+		transport,
+		port,
+	}
+}
+
+func (m *MyRoundTripper) RoundTrip(req *http.Request) (*http.Response, error) {
 	traffic := model.NewTrafficStatistics()
+	traffic.Port = m.Port
 	traffic.Request.Time = time.Now()
 	traffic.ID = uuid.NewV1().String()
 
