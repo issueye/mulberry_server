@@ -42,15 +42,16 @@ func TrafficMessages(condition *commonModel.PageQuery[*requests.QueryTraffic]) (
 }
 
 // PortForwardingTraffic 统计端口转发流量
-func PortForwardingTraffic() (*model.PortForwardingStatistics, error) {
+func PortForwardingTraffic() (*model.PortStatistics, error) {
 	nowDateStr := time.Now().Format("2006-01-02")
 	saveKey := fmt.Sprintf("TRAFFIC:%s:", nowDateStr)
 
-	stats := &model.PortForwardingStatistics{
-		TotalRequests:  0,
-		TotalInBytes:   0,
-		TotalOutBytes:  0,
-		PortStatistics: make(map[int]*model.PortStats),
+	stats := &model.PortStatistics{
+		TotalRequests: 0,
+		TotalInBytes:  0,
+		TotalOutBytes: 0,
+		Ports:         make([]int, 0),
+		Data:          make([]*model.PortStats, 0),
 	}
 
 	global.STORE.ForEach(saveKey, func(key string, value []byte) error {
@@ -66,20 +67,14 @@ func PortForwardingTraffic() (*model.PortForwardingStatistics, error) {
 		stats.TotalOutBytes += statistics.Response.OutHeaderBytes + statistics.Response.OutBodyBytes
 
 		// 按端口统计
-		// port := extractPortFromPath(statistics.Request.Path)
 		port := statistics.Port
 		if port > 0 {
-			if _, exists := stats.PortStatistics[port]; !exists {
-				stats.PortStatistics[port] = &model.PortStats{
-					Requests: 0,
-					InBytes:  0,
-					OutBytes: 0,
-				}
-			}
-			stats.PortStatistics[port].Requests++
-			stats.PortStatistics[port].InBytes += statistics.Request.InHeaderBytes + statistics.Request.InBodyBytes
-			stats.PortStatistics[port].OutBytes += statistics.Response.OutHeaderBytes + statistics.Response.OutBodyBytes
+			data := stats.GetPort(port)
+			data.Requests++
+			data.InBytes += statistics.Request.InHeaderBytes + statistics.Request.InBodyBytes
+			data.OutBytes += statistics.Response.OutHeaderBytes + statistics.Response.OutBodyBytes
 		}
+
 		return nil
 	})
 
