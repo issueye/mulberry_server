@@ -3,7 +3,7 @@ package helper_cmd
 import (
 	"context"
 	"io"
-	"mulberry/global"
+	"mulberry/internal/global"
 	"os"
 	"os/exec"
 	"path/filepath"

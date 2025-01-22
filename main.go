@@ -4,9 +4,9 @@ import (
 	"context"
 	"embed"
 	"io/fs"
-	"mulberry/global"
-	"mulberry/initialize"
-	"mulberry/pages/home"
+	"mulberry/internal/global"
+	"mulberry/internal/initialize"
+	"mulberry/internal/pages/home"
 	_ "mulberry/winappres"
 
 	"github.com/ying32/govcl/vcl"
