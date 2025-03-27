@@ -12,7 +12,6 @@ require (
 	github.com/gin-contrib/zap v1.1.4
 	github.com/gin-gonic/gin v1.10.0
 	github.com/glebarez/sqlite v1.11.0
-	github.com/godoes/gorm-oracle v1.6.14
 	github.com/gorilla/mux v1.8.1
 	github.com/ncruces/go-sqlite3 v0.21.3
 	github.com/satori/go.uuid v1.2.0
@@ -45,7 +44,6 @@ require (
 	github.com/cockroachdb/redact v1.1.5 // indirect
 	github.com/cockroachdb/tokenbucket v0.0.0-20230807174530-cc333fc44b06 // indirect
 	github.com/dustin/go-humanize v1.0.1 // indirect
-	github.com/emirpasic/gods v1.18.1 // indirect
 	github.com/gabriel-vasile/mimetype v1.4.5 // indirect
 	github.com/getsentry/sentry-go v0.27.0 // indirect
 	github.com/gin-contrib/sse v0.1.0 // indirect
@@ -74,7 +72,6 @@ require (
 	github.com/kr/pretty v0.3.1 // indirect
 	github.com/kr/text v0.2.0 // indirect
 	github.com/leodido/go-urn v1.4.0 // indirect
-	github.com/liushuochen/gotable v0.0.0-20221119160816-1113793e7092 // indirect
 	github.com/mailru/easyjson v0.7.7 // indirect
 	github.com/mattn/go-isatty v0.0.20 // indirect
 	github.com/matttproud/golang_protobuf_extensions v1.0.2-0.20181231171920-c182affec369 // indirect
@@ -91,7 +88,6 @@ require (
 	github.com/prometheus/procfs v0.7.3 // indirect
 	github.com/remyoudompheng/bigfft v0.0.0-20230129092748-24d4a6f8daec // indirect
 	github.com/rogpeppe/go-internal v1.9.0 // indirect
-	github.com/sijms/go-ora/v2 v2.8.21 // indirect
 	github.com/tetratelabs/wazero v1.8.2 // indirect
 	github.com/twitchyliquid64/golang-asm v0.15.1 // indirect
 	github.com/ugorji/go/codec v1.2.12 // indirect
